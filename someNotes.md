@@ -50,28 +50,6 @@ b)	Use a simple grid world without any obstacles
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 大纲
 1	Abstract 
 2	Introduction
@@ -123,19 +101,6 @@ The content of the dissertation is divided into three parts, firstly, we give th
 Our main contributions are 1) firstly applied reinforcement learning into online-routing service 2) showed the flexibility of reinforcement learning with different metric function, scenarios and even dynamics environment.
 
 Keywords: Route planning, routing service, reinforcement learning, online learning, 
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
