@@ -4,15 +4,13 @@
 
 \begin{englishabstract}
 
-	In a trans 
+	In a transportation system, giving the optimal path given the start point and target point is wildly used in many real world application. These kind of algorithms were called route planning algorithms or shortest path algorithms. As the transportation network getting more complicated and transportation tools developing rapidly such as subway, bus and airlines, traditional routing algorithms based on static map are no longer suitable for current environment. So it becomes a key research field that how to develop more strong and flexible routing algorithm that can be meet the new requirements.
 
-    With the development of Artificial Intelligence and Machine Learning, Reinforcement Learning, as an important method in this field, have showed its great potential in field like Go. As a decision-making and control schema, reinforcement learning also can be applied in route planning system, which is a widely used system in navigation system … In our work, we applied reinforcement learning to route planning problem and solved various scenarios, especially for the scenario that traditional search-based route planning algorithms like Dijkstra and  search can’t solve. 
+    With the development of Artificial Intelligence and Machine Learning, Reinforcement Learning (RL), as an important method in this field, have showed its great potential in field like Go. As a decision-making and control schema, RL also can be applied in route planning system. In our work, we applied RL to route planning problem and solved various scenarios, especially for the scenario that traditional search-based route planning algorithms like $A^*$, $Dijkstra$ can't solve.
     
-    The content of the dissertation is divided into three parts, firstly, we give the mathematical formulation of route planning problem, and adapted it into Markov Decision Process. Then we adapted it to different scenarios with modification of original formulation. At last, we compared our reinforcement learning based method with search based method which regard as the baseline under different experiments.
-    
-    Our main contributions are 1) firstly applied reinforcement learning into online-routing service 2) showed the flexibility of reinforcement learning with different metric function, scenarios and even dynamics environment.
-
-	\englishkeyword{route planning, routing service, reinforcement learning, online learning}
+    % The content of the dissertation is divided into five parts. In section one, we give the mathematical formulation of route planning problem, meanwhile we put forward some variations based on basic route planning problem like by adding extra turning cost, electrical car routing with moving distance limitation and charging sites, dynamics map involved traffic jam etc. In section two, we introduce the search-based routing algorithm like $A^*$, $Dijkstra$, and some variations based on these to solve some specific scenarios mentioned above. Then we give a simple analysis about the shortcoming of these methods, such as lacking flexibility, can't solve dynamics environment or more complicated users' requirements. In section three, we give the background of RL, including the Agent-based modeling, controlling schema based on Markov Decision Process (MDP). Also we give some basic concepts within RL like value function, policy function, at last we focus on value-based methods which we will use for route planning problem. In section four, we will focus on introduction our method, firstly, we adapt route planning problem into a standard MPD problem, and for each scenario, we give a RL algorithm based on $Q-learning$. In section five, we give the implementation of the code and experiments results. At last, we conclude our work and propose the future work.
+  
+	\englishkeyword{reinforcement learning, route planning, $Q-learning$, $Dijkstra$, $A^*$, turning cost, electrical car routing problem, dynamics map}
 \end{englishabstract}
 
 \end{document}
