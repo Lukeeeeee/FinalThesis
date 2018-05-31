@@ -41,7 +41,7 @@
 
 \RequirePackage{xeCJK}
 \RequirePackage{ifplatform}
-
+\RequirePackage{tikz}
 \ifwindows
   \setallmainfonts{Times New Roman}
   \setCJKmainfont[AutoFakeBold=true]{SimSun}
@@ -64,6 +64,9 @@
 
 \RequirePackage{zhnumber}
 \RequirePackage{pifont}
+
+% \RequirePackage{algorithm}
+% \RequirePackage{algorithmic}
 
 \RequirePackage[hyphens]{url}
 \RequirePackage[hyperfootnotes=false,
