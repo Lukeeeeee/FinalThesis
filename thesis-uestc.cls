@@ -387,7 +387,7 @@
 }{
   \checkoddpage
   \ifoddpage
-      \blankpage
+      \newpage
     \else
       \newpage
     \fi
@@ -412,7 +412,7 @@
 }{
   \checkoddpage
   \ifoddpage
-      \blankpage
+      \newpage
     \else
       \newpage
     \fi

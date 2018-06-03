@@ -37,7 +37,7 @@ Q-leanring 的算法。针对每个不同的场景，我们对算法做了相应
      \end{cases}
     \end{equation}
 \end{center}
-完成了对场景的马尔科夫决策过程的定义，我们采用基于查表法的 Q-learning 的强化学习算法解决这一问题，原因在于该场景的状态和行为的维度较低，因此适合使用查表法，状态行为价值函数，即 Q 函数的规模为$4\cdotN^2M^4$。对于 Q-learning 中学习速率的设置，由于该场景为一个静态场景，因此我们将速率设置在较大的范围进行调参，以保证模型以较少的数据量即可收敛。
+完成了对场景的马尔科夫决策过程的定义，我们采用基于查表法的 Q-learning 的强化学习算法解决这一问题，原因在于该场景的状态和行为的维度较低，因此适合使用查表法，状态行为价值函数，即 Q 函数的规模为$4\cdot N^2M^4$。对于 Q-learning 中学习速率的设置，由于该场景为一个静态场景，因此我们将速率设置在较大的范围进行调参，以保证模型以较少的数据量即可收敛。
 \subsection{场景2：带有转弯惩罚的场景}
 场景2中，我们加入了额外的转弯惩罚，使得例如似在场景1中，如果智能体探索出了多个最短路径，但选择较少左转或掉头，更多选择直行和右转的最短路应该是更优的。对该场景下的马尔科夫决策过程建模，状态$s_t$和$a_t$，以及状态转移矩阵$P(s_{t+1}|s_t, a_t)$我们都与场景1保持相同。但我们的奖励函数需要体现我们的场景变化，即对如果智能体选择了左转或掉头的动作，我们需要加入额外的惩罚。因此对场景2的奖赏函数$R_{case2}$定义如下：
 \begin{center}
@@ -54,7 +54,7 @@ Q-leanring 的算法。针对每个不同的场景，我们对算法做了相应
 首先我们需要定义场景中有$k$个充电桩，其位置组成的序列为$chargeSite = (x_1^{site}, y_1^{site}, x_2^{site}, y_2^{site}, ... , x_k^{site}, y_k^{site})$，同时定义智能体的当前剩余能量为$power_t$，以及车辆的满电量值为$FULL\_POWER$，在每次车辆到达充电桩后，其当前电量都会被赋值为满电量值。基于以上定义，对该场景下的状态定义为：
 \begin{center}
     \begin{equation}
-        s_t = (x_t^car, y_t^car, x^{target}_t, y^{target}_t) \union chargeSite \union
+        s_t = (x_t^car, y_t^car, x^{target}_t, y^{target}_t) \cup chargeSite \cup power_t
     \end{equation}
 \end{center}
 对行为$a_t$的定义维持不变。对状态转移函数，我们需要考虑在车辆在电量耗尽且未到达充电站或目标点时返回一个结束信号。因此状态转移公式$P_{case3}$如下：
@@ -72,7 +72,7 @@ Q-leanring 的算法。针对每个不同的场景，我们对算法做了相应
     \begin{equation}
         power_{t+1} = \begin{cases}
         return terminal signal &\mbox{if $power_t \leq 0$}\\
-        FULL\_POWER &\mbox{if (x_{t+1}^{car}, y_{t+1}^{car}) is a charge site}\\
+        FULL\_POWER &\mbox{if $(x_{t+1}^{car}, y_{t+1}^{car})$ is a charge site}\\
         power_{t} - 1 &\m{else}
         \end{cases}
     \end{equation}
@@ -88,8 +88,8 @@ Q-leanring 的算法。针对每个不同的场景，我们对算法做了相应
     \end{equation}
 \end{center}
 在该场景中，我们的算法仍然沿用基于查表法的 Q-leanring 算法，状态行为价值函数的空间规模为$4\cdot MAX\_POWER\cdot N^{2+k}M^{2+k}$。但如果在$k$较大的情况下，即充电桩数目过多时，可以考虑使用基于函数近似的方法。
-\subsection{场景4：动态地图环境}
-在场景4中，我们将地图的损耗变为随时间动态变化的函数，
-to be done1!!!
+% \subsection{场景4：动态地图环境}
+% 在场景4中，我们将地图的损耗变为随时间动态变化的函数，
+% to be done1!!!
 \subsection{本章小结}
 \end{document}
