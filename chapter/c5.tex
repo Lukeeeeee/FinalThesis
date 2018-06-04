@@ -14,7 +14,7 @@ Q-leanring 的算法。针对每个不同的场景，我们对算法做了相应
 
 \section{不同场景下算法设计方法}
 在这一章，我们定义四个场景的对应马尔科夫决策过程的严格定义，同时给出相应的算法。第二，三，四个场景都部分的基于场景一，然后同时根据场景的特性，做了相应的更改。我们希望四个场景能尽可能多个共享相同的建模上的设计，这样使得算法设计能够具有更好的通用性使得其并不被完全限制于该场景下，以及更进一步的，提出一个单一的集合模型使得其能够同时解决多个场景下的规划问题。
-\subsection{场景一：简单网格地图}
+\subsection{场景1：简单网格地图}
 首先对于一个简单的$N \times M$大小的网格地图，由于在任意时刻，车辆可以在不超出地图边界的情况下向上下左右四个方向移动，同时不考虑任何对车辆的行驶限制。因此对该场景的状态定义为$s_t = (x_t^car, y_t^car, x^{target}_t, y^{target}_t), x_t^car=0..N-1, y_t^car=0..M-1, x^{target}_t=0..N-1, y^{target}_t=0..M-1$， 其中$x_t^car, y_t^car$表示车辆当前位置，$x^{target}_t, y^{target}_t$ 表示目标位置。其行为定义集合为$a_t \in {Up, Down, Left, Right}$分别表示向上，下，左，右行驶。对于状态转移$P{s_{t+1}|s_t, a_t}$设计，我们限制车辆每个时刻只能移动一个单位的距离，同时不能超出边界，因此将状态转移表述为一个确定性过程，同时我们需要特殊判断是否车辆会超出地图边界，如果超出，维持原状态。定义公式如下：
 \begin{center}
     \begin{equation}
@@ -31,10 +31,11 @@ Q-leanring 的算法。针对每个不同的场景，我们对算法做了相应
 \begin{center}
     \begin{equation}
     r_t(s_t, s_{t+1}, a_t) = \begin{cases}
-     sng(Distance(x_{t+1}^car, y_{t+1}^car, x^{target}_{t+1}, y^{target}_{t+1}) - Distance(x_t^car, y_t^car, x^{target}_t, y^{target}_t)) + 100 and return terminal signal&\mbox{if car get the target point}\\
-     sng(Distance(x_{t+1}^car, y_{t+1}^car, x^{target}_{t+1}, y^{target}_{t+1}) - Distance(x_t^car, y_t^car, x^{target}_t, y^{target}_t)) - 10 &\mbox{if car try to reach out of map}\\
-     sng(Distance(x_{t+1}^car, y_{t+1}^car, x^{target}_{t+1}, y^{target}_{t+1}) - Distance(x_t^car, y_t^car, x^{target}_t, y^{target}_t))&\mbox{else}\\
+     sng(Dis(x_{t+1}^{car}, y_{t+1}^car, x^{target}_{t+1}, y^{target}_{t+1}) - Dis(x_t^car, y_t^car, x^{target}_t, y^{target}_t)) + 100 &\mbox{if car get the target point}\\
+     sng(Dis(x_{t+1}^car, y_{t+1}^car, x^{target}_{t+1}, y^{target}_{t+1}) - Dis(x_t^car, y_t^car, x^{target}_t, y^{target}_t)) - 10 &\mbox{if car try to reach out of map}\\
+     sng(Dis(x_{t+1}^car, y_{t+1}^car, x^{target}_{t+1}, y^{target}_{t+1}) - Dis(x_t^car, y_t^car, x^{target}_t, y^{target}_t)) &\mbox{else}\\
      \end{cases}
+    \mbox{$sng(\cdot)$ is the signum function, $Dis(\cdot$ is the Euclidean function}
     \end{equation}
 \end{center}
 完成了对场景的马尔科夫决策过程的定义，我们采用基于查表法的 Q-learning 的强化学习算法解决这一问题，原因在于该场景的状态和行为的维度较低，因此适合使用查表法，状态行为价值函数，即 Q 函数的规模为$4\cdot N^2M^4$。对于 Q-learning 中学习速率的设置，由于该场景为一个静态场景，因此我们将速率设置在较大的范围进行调参，以保证模型以较少的数据量即可收敛。
@@ -91,5 +92,6 @@ Q-leanring 的算法。针对每个不同的场景，我们对算法做了相应
 % \subsection{场景4：动态地图环境}
 % 在场景4中，我们将地图的损耗变为随时间动态变化的函数，
 % to be done1!!!
-\subsection{本章小结}
+\section{本章小结}
+在本章，我们给出了基于强化学习的最短路径规划算法。首先我们将原问题规划为一个马尔科夫决策过程，然后针对不同的场景，设计了不同的状态集合，行为集合，奖励函数和状态转移矩阵等。各个场景下的算法的核心在于如何合理的设计奖赏函数，使得将原问题中的目标函数很好的通过这一奖赏函数信号传达给智能体，以期望智能体学习到合理的策略，从而在最大化累计奖赏值的同时，解决原问题的目标函数。
 \end{document}

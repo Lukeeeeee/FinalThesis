@@ -582,7 +582,6 @@ UDC\textsuperscript{ 注1} \uline{\hspace{2.5in}} \\[12bp]
   \vspace{-15pt}
   \rule{1.63in}{.4pt} \\
   \fontsize{12pt}{12pt}\selectfont（作者姓名） \\[48bp]
-    
   \begin{tabular}{>{\fontsize{16pt}{16pt}\selectfont}l
       >{\centering\arraybackslash\fontsize{16pt}{16pt}\selectfont}
       p{4.45in}}
@@ -667,13 +666,13 @@ UDC\textsuperscript{ 注1} \uline{\hspace{2.5in}} \\[12bp]
 \renewcommand{\chaptermark}[1]{\markboth{第\zhnumber{\arabic{chapter}}章 \hspace{5.25pt}#1}{}}
 
 \newcommand{\thesisacknowledgement}{
-  \renewcommand\thesection{\arabic{section}}
-  \addtocontents{toc}{\protect\setcounter{tocdepth}{0}} 
-  \setcounter{section}{0}
   \chapter*{致\hspace{12pt}谢}
-  \addcontentsline{toc}{chapter}{致\hspace{12pt}谢}
-  \markboth{致谢}{致谢}
-  \thispagestyle{fancy}
+      \renewcommand\thesection{\arabic{section}}
+      \addtocontents{toc}{\protect\setcounter{tocdepth}{0}} 
+      \setcounter{section}{0}
+      \addcontentsline{toc}{chapter}{致\hspace{12pt}谢}
+      \markboth{致谢}{致谢}
+      \thispagestyle{fancy}
 }
 
 \newcommand{\thesischapterexordium}{
@@ -693,22 +692,26 @@ UDC\textsuperscript{ 注1} \uline{\hspace{2.5in}} \\[12bp]
 }
 
 \newcommand{\thesisappendix}{
+  \setcounter{chapter}{1}
+  \setcounter{section}{0}
   \chapter*{附\chinesespace 录}
-    \setcounter{section}{0}
     \addcontentsline{toc}{chapter}{附录}
     \markboth{附录}{附录}
     \thispagestyle{fancy}
+    \renewcommand\thesection{\arabic{chapter}.\arabic{section}}
     \renewcommand{\theequation}{a-\arabic{equation}}
     \renewcommand{\thetable}{a-\arabic{table}}
     \renewcommand{\thefigure}{a-\arabic{figure}}
 }
 
 \newcommand{\thesistranslationoriginal}{
+  \setcounter{chapter}{1}
+  \setcounter{section}{0}
   \chapter*{外文资料原文}
-    \setcounter{section}{0}
     \addcontentsline{toc}{chapter}{外文资料原文}
     \markboth{外文资料原文}{外文资料原文}
     \thispagestyle{fancy}
+    \renewcommand\thesection{\arabic{chapter}.\arabic{section}}
     \renewcommand{\theequation}{\arabic{equation}}
     \renewcommand{\thetable}{\arabic{table}}
     \renewcommand{\thefigure}{\arabic{figure}}
@@ -717,11 +720,13 @@ UDC\textsuperscript{ 注1} \uline{\hspace{2.5in}} \\[12bp]
 }
 
 \newcommand{\thesistranslationchinese}{
+  \setcounter{chapter}{1}
+  \setcounter{section}{0}
   \chapter*{外文资料译文}
-    \setcounter{section}{0}
     \addcontentsline{toc}{chapter}{外文资料译文}
     \markboth{外文资料译文}{外文资料译文}
     \thispagestyle{fancy}
+    \renewcommand\thesection{\arabic{chapter}.\arabic{section}}
     \renewcommand{\theequation}{\arabic{equation}}
     \renewcommand{\thetable}{\arabic{table}}
     \renewcommand{\thefigure}{\arabic{figure}}
