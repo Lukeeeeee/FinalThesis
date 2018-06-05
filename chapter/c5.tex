@@ -15,39 +15,44 @@ Q-leanring 的算法。针对每个不同的场景，我们对算法做了相应
 \section{不同场景下算法设计方法}
 在这一章，我们定义四个场景的对应马尔科夫决策过程的严格定义，同时给出相应的算法。第二，三，四个场景都部分的基于场景一，然后同时根据场景的特性，做了相应的更改。我们希望四个场景能尽可能多个共享相同的建模上的设计，这样使得算法设计能够具有更好的通用性使得其并不被完全限制于该场景下，以及更进一步的，提出一个单一的集合模型使得其能够同时解决多个场景下的规划问题。
 \subsection{场景1：简单网格地图}
-首先对于一个简单的$N \times M$大小的网格地图，由于在任意时刻，车辆可以在不超出地图边界的情况下向上下左右四个方向移动，同时不考虑任何对车辆的行驶限制。因此对该场景的状态定义为$s_t = (x_t^car, y_t^car, x^{target}_t, y^{target}_t), x_t^car=0..N-1, y_t^car=0..M-1, x^{target}_t=0..N-1, y^{target}_t=0..M-1$， 其中$x_t^car, y_t^car$表示车辆当前位置，$x^{target}_t, y^{target}_t$ 表示目标位置。其行为定义集合为$a_t \in {Up, Down, Left, Right}$分别表示向上，下，左，右行驶。对于状态转移$P{s_{t+1}|s_t, a_t}$设计，我们限制车辆每个时刻只能移动一个单位的距离，同时不能超出边界，因此将状态转移表述为一个确定性过程，同时我们需要特殊判断是否车辆会超出地图边界，如果超出，维持原状态。定义公式如下：
+首先对于一个简单的$N \times M$大小的网格地图，由于在任意时刻，车辆可以在不超出地图边界的情况下向上下左右四个方向移动，同时不考虑任何对车辆的行驶限制。因此对该场景的状态定义为$s_t = (x_t^{car}, y_t^{car}, x^{target}_t, y^{target}_t), x_t^{car}=0..N-1, y_t^{car}=0..M-1, x^{target}_t=0..N-1, y^{target}_t=0..M-1$， 其中$x_t^{car}, y_t^{car}$表示车辆当前位置，$x^{target}_t, y^{target}_t$ 表示目标位置。其行为定义集合为$a_t \in {Up, Down, Left, Right}$分别表示向上，下，左，右行驶。对于状态转移$P{s_{t+1}|s_t, a_t}$设计，我们限制车辆每个时刻只能移动一个单位的距离，同时不能超出边界，因此将状态转移表述为一个确定性过程，同时我们需要特殊判断是否车辆会超出地图边界，如果超出，维持原状态。定义公式如下：
 \begin{center}
     \begin{equation}
     s_{t+1} = \begin{cases}
-    (x_t^car, y_t^car, x^{target}_t, y^{target}_t) &\mbox{if car will reach out of map}\\
-    (x_t^car + 1, y_t^car, x^{target}_t, y^{target}_t) &\mbox{if $a_t$ is Right}\\
-    (x_t^car - 1, y_t^car, x^{target}_t, y^{target}_t) &\mbox{if $a_t$ is Left}\\
-    (x_t^car, y_t^car + 1, x^{target}_t, y^{target}_t) &\mbox{if $a_t$ is Up}\\
-    (x_t^car, y_t^car - 1, x^{target}_t, y^{target}_t) &\mbox{if $a_t$ is Down}
+    (x_t^{car}, y_t^{car}, x^{target}_t, y^{target}_t) &\mbox{if car will reach out of map}\\
+    (x_t^{car} + 1, y_t^{car}, x^{target}_t, y^{target}_t) &\mbox{if $a_t$ is Right}\\
+    (x_t^{car} - 1, y_t^{car}, x^{target}_t, y^{target}_t) &\mbox{if $a_t$ is Left}\\
+    (x_t^{car}, y_t^{car} + 1, x^{target}_t, y^{target}_t) &\mbox{if $a_t$ is Up}\\
+    (x_t^{car}, y_t^{car} - 1, x^{target}_t, y^{target}_t) &\mbox{if $a_t$ is Down}
     \end{cases}
 \end{equation}
 \end{center}
 奖赏函数的设计是强化学习中一个核心的部分，特别是对于给定的场景本身不存在一个原有的奖赏产生机制时，我们需要手动设置和调整奖赏函数的设计，作为唯一指导智能体进行学习的信号，我们需要将我们的学习目标或评价机制通过奖赏函数体现出来。而设计奖赏函数需要遵循以下几个原则，首先奖励函数不能是过于稀疏的，过于稀疏的奖赏函数，即在大多数状态空间的点上为0，会使得智能体在初始探索时，难以获得有效的指导信号。因为智能体需要根据不同状态下奖赏值的大小进行行为的选择和策略的更新，而稀疏的奖赏函数导致了在初期探索过程中无法进行更新，特别在一些函数近似的方法中，如使用深度神经网络拟合方法时，参数的更新无法获得有效的梯度方向信息，导致模型参数无法收敛，甚至振荡和爆炸。其次，奖赏函数的设计不应该体现任何关于策略的指导信息，即我们不应该直接将智能体期望学习到的策略融入到奖赏信号中，例如如果为围棋问题设计奖赏信号，最直观和符合原则的做法为只有当达到获胜状态时才给予一个正的奖赏信号，而在其他状态下不产生任何奖赏信号。因此基于这两个原则，我们设计奖赏函数基于三个部分，首先如果在一步的移动中，智能体更加接近目标点，我们给+1的奖励，如果远离则为-1的奖励，如果动作导致其行驶出地图边界，我们给-10的奖励，如果新的状态到达了目标点，我们给予+100的奖励。因此对场景1的奖赏函数公式$R_{case1}$定义如下：
 \begin{center}
     \begin{equation}
+    \label{rewardcase1}
     r_t(s_t, s_{t+1}, a_t) = \begin{cases}
-     sng(Dis(x_{t+1}^{car}, y_{t+1}^car, x^{target}_{t+1}, y^{target}_{t+1}) - Dis(x_t^car, y_t^car, x^{target}_t, y^{target}_t)) + 100 &\mbox{if car get the target point}\\
-     sng(Dis(x_{t+1}^car, y_{t+1}^car, x^{target}_{t+1}, y^{target}_{t+1}) - Dis(x_t^car, y_t^car, x^{target}_t, y^{target}_t)) - 10 &\mbox{if car try to reach out of map}\\
-     sng(Dis(x_{t+1}^car, y_{t+1}^car, x^{target}_{t+1}, y^{target}_{t+1}) - Dis(x_t^car, y_t^car, x^{target}_t, y^{target}_t)) &\mbox{else}\\
+     sng(Dis(P_{t+1}^{car}, P_{t+1}^{target}) - Dis(P_{t}^{car}, P_{t}^{target}) + A &\mbox{if reach the target}\\
+     sng(Dis(P_{t+1}^{car}, P_{t+1}^{target}) - Dis(P_{t}^{car}, P_{t}^{target}) - B &\mbox{if hit bound of map}\\
+     sng(Dis(P_{t+1}^{car}, P_{t+1}^{target}) - Dis(P_{t}^{car}, P_{t}^{target}) &\mbox{else}\\
      \end{cases}
-    \mbox{$sng(\cdot)$ is the signum function, $Dis(\cdot$ is the Euclidean function}
     \end{equation}
 \end{center}
-完成了对场景的马尔科夫决策过程的定义，我们采用基于查表法的 Q-learning 的强化学习算法解决这一问题，原因在于该场景的状态和行为的维度较低，因此适合使用查表法，状态行为价值函数，即 Q 函数的规模为$4\cdot N^2M^4$。对于 Q-learning 中学习速率的设置，由于该场景为一个静态场景，因此我们将速率设置在较大的范围进行调参，以保证模型以较少的数据量即可收敛。
+其中$sng(\cdot)$ 为符号函数， $Dis(\cdot)$ 为欧式距离计算公式，$P_{t}^{car} = (x_t^{car}, y_t^{car}), P_{t}^{target} = (x^{target}_t, y^{target}_t)$，$A,B$为常量，且$A, B \geq 0$。\par
+
+完成了对场景的马尔科夫决策过程的定义，我们采用基于查表法的 Q-learning 的强化学习算法解决这一问题，原因在于该场景的状态和行为的维度较低，因此适合使用查表法，状态行为价值函数，即 Q 函数的规模为$4\cdot N^2\cdot M^4$。对于 Q-learning 中学习速率的设置，由于该场景为一个静态场景，因此我们将速率设置在较大的范围进行调参，以保证模型以较少的数据量即可收敛。
 \subsection{场景2：带有转弯惩罚的场景}
 场景2中，我们加入了额外的转弯惩罚，使得例如似在场景1中，如果智能体探索出了多个最短路径，但选择较少左转或掉头，更多选择直行和右转的最短路应该是更优的。对该场景下的马尔科夫决策过程建模，状态$s_t$和$a_t$，以及状态转移矩阵$P(s_{t+1}|s_t, a_t)$我们都与场景1保持相同。但我们的奖励函数需要体现我们的场景变化，即对如果智能体选择了左转或掉头的动作，我们需要加入额外的惩罚。因此对场景2的奖赏函数$R_{case2}$定义如下：
 \begin{center}
     \begin{equation}
+    \label{eq2reward}
     r_t(s_t, s_{t+1}, a_t) = \begin{cases}
-     R_{case1}(s_t, s_{t+1}, a_t) - 5 &\mbox{if the car choose turn left or turn around}\\
-     R_{case1}(s_t, s_{t+1}, a_t) &\mbox{else}
+     R_{case1}(s_t, s_{t+1}, a_t) - C &\mbox{if the car turn left or around}\\
+     R_{case1}(s_t, s_{t+1}, a_t) &\mbox{else}\\
      \end{cases}
     \end{equation}
+   \mbox{$C$ is constant, and $C \geq 0$}
+
 \end{center}
 同样由于$s_t, a_t$的形式和规模相比场景1未发生变化，我们仍然沿用基于查表法的 Q-learning，并设置一个较大的学习速率进行更新。
 \subsection{场景3：带有行驶路径限制和充电桩的场景}
@@ -55,24 +60,24 @@ Q-leanring 的算法。针对每个不同的场景，我们对算法做了相应
 首先我们需要定义场景中有$k$个充电桩，其位置组成的序列为$chargeSite = (x_1^{site}, y_1^{site}, x_2^{site}, y_2^{site}, ... , x_k^{site}, y_k^{site})$，同时定义智能体的当前剩余能量为$power_t$，以及车辆的满电量值为$FULL\_POWER$，在每次车辆到达充电桩后，其当前电量都会被赋值为满电量值。基于以上定义，对该场景下的状态定义为：
 \begin{center}
     \begin{equation}
-        s_t = (x_t^car, y_t^car, x^{target}_t, y^{target}_t) \cup chargeSite \cup power_t
+        s_t = (x_t^{car}, y_t^{car}, x^{target}_t, y^{target}_t) \cup chargeSite \cup power_t
     \end{equation}
 \end{center}
 对行为$a_t$的定义维持不变。对状态转移函数，我们需要考虑在车辆在电量耗尽且未到达充电站或目标点时返回一个结束信号。因此状态转移公式$P_{case3}$如下：
 \begin{center}
     \begin{equation}
     s_{t+1} = \begin{cases}
-    (x_t^car, y_t^car, x^{target}_t, y^{target}_t, power_t-1, chargeSite) &\mbox{if car will reach out of map}\\
-    (x_t^car + 1, y_t^car, x^{target}_t, y^{target}_t, power_t-1, chargeSite) &\mbox{if $a_t$ is Right}\\
-    (x_t^car - 1, y_t^car, x^{target}_t, y^{target}_t, power_t-1, chargeSite) &\mbox{if $a_t$ is Left}\\
-    (x_t^car, y_t^car + 1, x^{target}_t, y^{target}_t, power_t-1, chargeSite) &\mbox{if $a_t$ is Up}\\
-    (x_t^car, y_t^car - 1, x^{target}_t, y^{target}_t, power_t-1, chargeSite) &\mbox{if $a_t$ is Down}
+    (x_t^{car}, y_t^{car}, x^{target}_t, y^{target}_t, power_t-1, chargeSite) &\mbox{if car will reach out of map}\\
+    (x_t^{car} + 1, y_t^{car}, x^{target}_t, y^{target}_t, power_t-1, chargeSite) &\mbox{if $a_t$ is Right}\\
+    (x_t^{car} - 1, y_t^{car}, x^{target}_t, y^{target}_t, power_t-1, chargeSite) &\mbox{if $a_t$ is Left}\\
+    (x_t^{car}, y_t^{car} + 1, x^{target}_t, y^{target}_t, power_t-1, chargeSite) &\mbox{if $a_t$ is Up}\\
+    (x_t^{car}, y_t^{car} - 1, x^{target}_t, y^{target}_t, power_t-1, chargeSite) &\mbox{if $a_t$ is Down}
     \end{cases}
     \end{equation}
     \mbox{其中对$power_{t+1}$的转移公式$P(power_{t+1}| powert_{t}, x_{t+1}^{car}, y_{t+1}^{car})$定义如下：}
     \begin{equation}
         power_{t+1} = \begin{cases}
-        return terminal signal &\mbox{if $power_t \leq 0$}\\
+        Terminal &\mbox{if $power_t \leq 0$}\\
         FULL\_POWER &\mbox{if $(x_{t+1}^{car}, y_{t+1}^{car})$ is a charge site}\\
         power_{t} - 1 &\m{else}
         \end{cases}
@@ -81,12 +86,15 @@ Q-leanring 的算法。针对每个不同的场景，我们对算法做了相应
 对奖赏函数的设计，我们加入中途耗尽电量的惩罚和到达充电桩的奖赏值。因此对奖赏函数$R_{case3}$更新如下：
 \begin{center}
     \begin{equation}
+    \label{eq3reward}
     r_t(s_t, s_{t+1}, a_t) = \begin{cases}
-     R_{case1}(s_t, s_{t+1}, a_t) - 100 &\mbox{if the car out ot power in the middle}\\
-     R_{case1}(s_t, s_{t+1}, a_t) + 20&\mbox{if car reach the charge site}\\
+     R_{case1}(s_t, s_{t+1}, a_t) - D &\mbox{if the car out ot power in the middle}\\
+     R_{case1}(s_t, s_{t+1}, a_t) + E&\mbox{if car reach the charge site}\\
      R_{case1}(s_t, s_{t+1}, a_t)&\mbox{else}
-     \end{cases}
+    \end{cases}
     \end{equation}
+    \mbox{$D, E$ is constant, and $D, E \geq 0$}
+
 \end{center}
 在该场景中，我们的算法仍然沿用基于查表法的 Q-leanring 算法，状态行为价值函数的空间规模为$4\cdot MAX\_POWER\cdot N^{2+k}M^{2+k}$。但如果在$k$较大的情况下，即充电桩数目过多时，可以考虑使用基于函数近似的方法。
 % \subsection{场景4：动态地图环境}
