@@ -12,7 +12,7 @@
 
 \begin{document}
 
-% \makecover
+% \makecover[0]
 
 % this is a thesis template with mutiple files: the chapters and the misc in standalone mode
 % to avoid too many files in current folder, template add extra direcotry: chapter and misc
@@ -37,7 +37,10 @@
 %\include{chapter/template}
 
 % misc
-\include{misc/acknowledgement}
+\include{misc/acknowledgement}+
+
+
+
 \thesisloadbibliography[nocite]{reference}
 
 %
@@ -47,12 +50,14 @@
 % \nocite{*}
 % \bibliographystyle{thesis-uestc}
 % \bibliography{reference}
-%
+% %
 
 % comment while no need
 % \include{misc/appendix}
+% \include{misc/appendix}
 % \thesisloadachievement{publications}
 \include{misc/translate_original}
+
 \include{misc/translate_chinese}
 
 \end{document}

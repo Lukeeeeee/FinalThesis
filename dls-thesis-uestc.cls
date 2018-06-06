@@ -27,7 +27,6 @@
 \RequirePackage[usenames,dvipsnames,svgnames,table]{xcolor}
 \RequirePackage{graphicx}
 \RequirePackage[font={doublespacing, small}, labelsep=space, skip=6pt]{caption}
-% \RequirePackage{mathtools}
 
 \RequirePackage{array}
 \RequirePackage{setspace}
@@ -43,7 +42,6 @@
 \RequirePackage{xeCJK}
 \RequirePackage{ifplatform}
 \RequirePackage{tikz}
-
 \ifwindows
   \setallmainfonts{Times New Roman}
   \setCJKmainfont[AutoFakeBold=true]{SimSun}
@@ -505,8 +503,8 @@
 
 
 \DeclareOption{bachelor}{
-  \renewcommand{\chinesedegreename}{学士}
-  \renewcommand{\chinesebooktitle}{学士学位论文}
+  \renewcommand{\chinesedegreename}{本科}
+  \renewcommand{\chinesebooktitle}{本科学位论文}
   \renewcommand{\englishbooktitle}{Bachelor Thesis}
 }
 
@@ -695,27 +693,26 @@ UDC\textsuperscript{ 注1} \uline{\hspace{2.5in}} \\[12bp]
 }
 
 \newcommand{\thesisappendix}{
-
+  \setcounter{chapter}{1}
+  \setcounter{section}{0}
   \chapter*{附\chinesespace 录}
-    % \setcounter{chapter}{1}
-    % \setcounter{section}{0}
     \addcontentsline{toc}{chapter}{附录}
     \markboth{附录}{附录}
     \thispagestyle{fancy}
-    % \renewcommand\thesection{\arabic{chapter}.\arabic{section}}
+    \renewcommand\thesection{\arabic{chapter}.\arabic{section}}
     \renewcommand{\theequation}{a-\arabic{equation}}
     \renewcommand{\thetable}{a-\arabic{table}}
     \renewcommand{\thefigure}{a-\arabic{figure}}
 }
 
 \newcommand{\thesistranslationoriginal}{
+  \setcounter{chapter}{1}
+  \setcounter{section}{0}
   \chapter*{外文资料原文}
-    % \setcounter{chapter}{1}
-    % \setcounter{section}{0}
     \addcontentsline{toc}{chapter}{外文资料原文}
     \markboth{外文资料原文}{外文资料原文}
     \thispagestyle{fancy}
-    % \renewcommand\thesection{\arabic{chapter}.\arabic{section}}
+    \renewcommand\thesection{\arabic{chapter}.\arabic{section}}
     \renewcommand{\theequation}{\arabic{equation}}
     \renewcommand{\thetable}{\arabic{table}}
     \renewcommand{\thefigure}{\arabic{figure}}
@@ -724,13 +721,13 @@ UDC\textsuperscript{ 注1} \uline{\hspace{2.5in}} \\[12bp]
 }
 
 \newcommand{\thesistranslationchinese}{
+  \setcounter{chapter}{1}
+  \setcounter{section}{0}
   \chapter*{外文资料译文}
-    % \setcounter{chapter}{1}
-    % \setcounter{section}{0}
     \addcontentsline{toc}{chapter}{外文资料译文}
     \markboth{外文资料译文}{外文资料译文}
     \thispagestyle{fancy}
-    % \renewcommand\thesection{\arabic{chapter}.\arabic{section}}
+    \renewcommand\thesection{\arabic{chapter}.\arabic{section}}
     \renewcommand{\theequation}{\arabic{equation}}
     \renewcommand{\thetable}{\arabic{table}}
     \renewcommand{\thefigure}{\arabic{figure}}
