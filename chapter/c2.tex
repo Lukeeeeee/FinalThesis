@@ -15,9 +15,9 @@
 我们定义$P=\{v_1, v_2,...,v_k\}$为图中的一条路径，路径的长度或总损失定义为$L(P) = \sum_{i=1}^{j-1} f(e_{v_i,v_{i+1}})$。基于以上定义，最短路径规划问题可以被定义为：在图$G$中，给定某一起始点$v_s$和终止点$v_t$，找到某一条路径$P_{optimal}$使得$L(P_{optimal})$最小，公式定义如下：
 \begin{center}
 \begin{equation}
-P_{optimal} = argmin_{P}(L(P))
+P_{optimal}(v_s, v_t) = argmin_{P}(L(P(v_s, v_t)))
 \end{equation}
-\mbox{where $v_s$ is the start node of $P$, $v_t$ is the end node of $P$)}
+\mbox{where $v_s$ is the start node of $P$, $v_t$ is the end node of $P$}
 \mbox{argmin($\cdot$)is the argument of the minimum function}
 \end{center}
 
@@ -90,7 +90,7 @@ $A \in\mathbb{R}, C\ge0$
 \subsection{场景3：带有行驶路径限制和充电桩的场景}
 随着电动汽车的普及和推广，基于电动车的路径规划也作为某一特定问题被各国学者进行研究。该场景的特殊性在于，电动车普遍行驶距离较短，在进行单次路径规划中，我们在求解最短路径的同时，需要保证其在任意行驶过程中保持电量大于零，如果电量过低，需要到就近的充电桩进行充电后再行驶。
 这给原始的简单网格地图的场景带来了如下变化：首先，地图中增加多个充电桩的位置，充电桩的集合被定义为 $T = \{t_{1}, t_{2}...,t_{k}\}, t_i \in V$；
-同时对车辆，除去其当前位置，我们需要引入$\mathrm{power}\in[0, MAXPOWER]$表示车辆当前剩余电量。其中 $MAXPOWER\ge0$，表示车辆电量的最大值。修改后的地图如图\ref{figcase2}所示
+同时对车辆，除去其当前位置，我们需要引入$\mathrm{power}\in[0, FULL\_POWER]$表示车辆当前剩余电量。其中 $FULL\_POWER\ge0$，表示车辆电量的最大值。修改后的地图如图\ref{figcase2}所示
 
 \begin{figure}[H]
 \centering

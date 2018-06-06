@@ -37,14 +37,15 @@ Q-leanring 的算法。针对每个不同的场景，我们对算法做了相应
 \begin{center}
     \begin{equation}
     \label{rewardcase1}
-    r_t^{case1}(s_t, s_{t+1}, a_t) = \begin{cases}
+    R_t^{case1}(s_t, s_{t+1}, a_t) = \begin{cases}
      sng(Dis(P_{t+1}^{car}, P_{t+1}^{target}) - Dis(P_{t}^{car}, P_{t}^{target}) + A &\mbox{if reach the target}\\
      sng(Dis(P_{t+1}^{car}, P_{t+1}^{target}) - Dis(P_{t}^{car}, P_{t}^{target}) - B &\mbox{if hit bound of map}\\
-     sng(Dis(P_{t+1}^{car}, P_{t+1}^{target}) - Dis(P_{t}^{car}, P_{t}^{target}) &\mbox{else}\\
+     sng(Dis(P_{t+1}^{car}, P_{t+1}^{target}) - Dis(P_{t}^{car}, P_{t}^{target}) &\mbox{else}
      \end{cases}
     \end{equation}
+    \mbox{其中$sng(\cdot)$ 为符号函数， $Dis(\cdot)$ 为欧式距离计算公式，$A,B$为常量，且$A, B \geq 0$}\\
+    \mbox{$P_{t}^{car} = (x_t^{car}, y_t^{car}), P_{t}^{target} = (x^{target}_t, y^{target}_t)$，}
 \end{center}
-其中$sng(\cdot)$ 为符号函数， $Dis(\cdot)$ 为欧式距离计算公式，$P_{t}^{car} = (x_t^{car}, y_t^{car}), P_{t}^{target} = (x^{target}_t, y^{target}_t)$，$A,B$为常量，且$A, B \geq 0$。\par
 
 完成了对场景的马尔科夫决策过程的定义，我们采用基于查表法的 Q-Learning 的强化学习算法解决这一问题，原因在于该场景的状态和行为的维度较低，因此适合使用查表法，状态行为价值函数，即 Q 函数的规模为$4\cdot N^2\cdot M^2 \cdot 4$。对于 Q-Learning 中学习速率的设置，由于该场景为一个静态场景，因此我们将速率设置在较大的范围进行调参，以保证模型以较少的数据量即可收敛。
 \subsection{场景2：带有转弯惩罚的场景}
@@ -53,7 +54,7 @@ Q-leanring 的算法。针对每个不同的场景，我们对算法做了相应
 \begin{center}
     \begin{equation}
     \label{eq2reward}
-    r_t^{case3}(s_t, s_{t+1}, a_t) = \begin{cases}
+    R_t^{case2}(s_t, s_{t+1}, a_t) = \begin{cases}
      R_{case1}(s_t, s_{t+1}, a_t) - C &\mbox{if the car turn left or around}\\
      R_{case1}(s_t, s_{t+1}, a_t) &\mbox{else}\\
      \end{cases}
@@ -94,8 +95,8 @@ Q-leanring 的算法。针对每个不同的场景，我们对算法做了相应
 \begin{center}
     \begin{equation}
     \label{eq3reward}
-    r_t^{case3}(s_t, s_{t+1}, a_t) = \begin{cases}
-     R_{case1}(s_t, s_{t+1}, a_t) - D &\mbox{if the car out ot power in the middle}\\
+    R_t^{case3}(s_t, s_{t+1}, a_t) = \begin{cases}
+     R_{case1}(s_t, s_{t+1}, a_t) - D &\mbox{if the car out of power in the middle}\\
      R_{case1}(s_t, s_{t+1}, a_t) + E&\mbox{if car reach the charge site}\\
      R_{case1}(s_t, s_{t+1}, a_t)&\mbox{else}
     \end{cases}
