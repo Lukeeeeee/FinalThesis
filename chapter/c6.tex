@@ -3,12 +3,11 @@
 \begin{document}
 	
 \chapter{代码实现及实验}
-在本章，我们将给出基于强化学习的路径规划问题的算法实现，以及实验结果展示。首先我们介绍为实现该算法，我们设计并开发了一个基于 Python 的强化学习框架，其包括了 Q-leanring 等多个方法，同时我们实现了多个场景下的地图环境，然后给出我们的实验设计和参数的设置。最后我们给出实验的结果，以及对结果的简要分析。
+在本章，我们将给出基于强化学习的路径规划问题的算法实现，以及实验结果展示。首先我们介绍为实现该算法，我们设计并开发了一个基于 Python 的强化学习框架，其包括了 Q-Learning 等多个方法，同时我们实现了多个场景下的地图环境，然后给出我们的实验设计和参数的设置。最后我们给出实验的结果，以及对结果的简要分析。
 \section{基于面向对象设计的代码实现}
 在代码实现上，我们基于 Python语言实现了基于面向对象设计思想的代码框架，以期望代码能够具有较高的鲁棒性和重用性和灵活性。\par
-首先在类的设计上，我们将智能体抽象为代码中的 Agent 类，环境抽象为Environment 类，两者都是一个抽象类（Abstract Class），其次，我们将任何一种算法抽象为 Model 类（同样为抽象类），通过分离智能体和模型类，可以使得智能体方便载入各种不同的算法，并保持自身行为方式不改变，这使用了设计模式中的典型的策略模式（Strategy Pattern）。同时我们设计了Config 类用于托管各个模块的配置文件，超参数等，这些参数在实验开始时通过本地的文件加载进来，这使得我们解除了所有的硬编码（Hard Code），使得对实验的调参工作只需要更改配置文件即可实现，从而变得相对容易和灵活。同时，我们设计了一个 Sampler 的类。它将托管智能体与环境的交互过程，即采样过程，这使得我们能通过实现不同的 Sampler 类，轻松的更改对采样过程的控制。整个代码的UML图如下：
+首先在类的设计上，我们将智能体抽象为代码中的 Agent 类，环境抽象为Environment 类，两者都是一个抽象类（Abstract Class），其次，我们将任何一种算法抽象为 Model 类（同样为抽象类），通过分离智能体和模型类，可以使得智能体方便载入各种不同的算法，并保持自身行为方式不改变，这使用了设计模式中的典型的策略模式（Strategy Pattern）。同时我们设计了Config 类用于托管各个模块的配置文件，超参数等，这些参数在实验开始时通过本地的文件加载进来，这使得我们解除了所有的硬编码（Hard Code），使得对实验的调参工作只需要更改配置文件即可实现，从而变得相对容易和灵活。同时，我们设计了一个 Sampler 的类。它将托管智能体与环境的交互过程，即采样过程，这使得我们能通过实现不同的 Sampler 类，轻松的更改对采样过程的控制。代码的UML图如图\ref{6-1}所示：
 \begin{figure}[H]
-
 	\includegraphics[width=12.0cm]{pic/6-1.pdf}
 	\caption{代码实现 UML 图}
 	\label{6-1}
@@ -29,34 +28,60 @@
 \end{figure}
 可以看出，在两次采样和训练周期后，模型的奖赏值就稳定收敛到了一个最优值，并且10次独立实验结果的统计方差几乎为0，说明结果的稳定性较高，结果可以稳定复现。同时我们将Q-leanring的查找表也做了可视化分析，进一步确认智能体学到一个实际有效的策略。首先我们选择了三个点$(0, 3), (2, 2), (0, 0), (3,0)$的对应4个行为的状态行为函数的变化过程，并进行分别进行比较。在起始点$(0,0)$时，显然向右或向上走优于其他行为，因为该情况下只有向右或向上为合法动作，所以向右和向上行的Q 值曲线较高，并且基本重合，如图\ref{1case00}所示。
 在$(2, 2)$点时，四个动作都为合法动作，但明显向右或向上走更接近目标，因此此时采取向右或向上也应该具有更高的Q值，如图\ref{1case22}。在点$(3, 0)$和点$(0, 3)$，前者的最优动作为向上，后者为向右，对应的Q 值曲线也表明智能体学到了这一策略，如图\ref{1case30}，和图\ref{1case03}所示。\par
+% \begin{figure}[H]
+%     \centering
+
+% 	\subfigure[]{
+% 		\label{1case00}
+% 		\includegraphics[width=7.3cm]{pic/case1/00.pdf}}
+% 	\subfigure[]{
+% 		\label{1case22}
+% 		\includegraphics[width=7.3cm]{pic/case1/22.pdf}}
+% 	\caption{Q 值在点（0，0）和点（2，2）的变化曲线}
+% 	\label{fig1}
+% \end{figure}
 \begin{figure}[H]
     \centering
-
-	\subfigure[]{
-		\label{1case00}
-		\includegraphics[width=7.3cm]{pic/case1/00.pdf}}
-	\subfigure[]{
-		\label{1case22}
-		\includegraphics[width=7.3cm]{pic/case1/22.pdf}}
-	\caption{Q 值在点（0，0）和点（2，2）的变化曲线}
-	\label{fig1}
+	\includegraphics[width=10.3cm]{pic/case1/00.pdf}
+    \caption{Q 值在点（0，0）的变化曲线}
+    \label{1case00}
 \end{figure}
 
 \begin{figure}[H]
     \centering
+	\includegraphics[width=10.3cm]{pic/case1/22.pdf}
+    \caption{Q 值在点（2，2）的变化曲线}
+    \label{1case22}
+\end{figure}
 
-	\subfigure[]{
-		\label{1case30}
-		\includegraphics[width=7.3cm]{pic/case1/30.pdf}}
-	\subfigure[]{
-		\label{1case03}
-		\includegraphics[width=7.3cm]{pic/case1/03.pdf}}
-	\caption{Q 值在点（3，0）和点（0，3）的变化曲线}
-	\label{fig2}
+% \begin{figure}[H]
+%     \centering
+
+% 	\subfigure[]{
+% 		\label{1case30}
+% 		\includegraphics[width=7.3cm]{pic/case1/30.pdf}}
+% 	\subfigure[]{
+% 		\label{1case03}
+% 		\includegraphics[width=7.3cm]{pic/case1/03.pdf}}
+% 	\caption{Q 值在点（3，0）和点（0，3）的变化曲线}
+% 	\label{fig2}
+% \end{figure}
+\begin{figure}[H]
+    \centering
+	\includegraphics[width=10.3cm]{pic/case1/30.pdf}
+    \caption{Q 值在点（3，0）的变化曲线}
+    \label{1case30}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+	\includegraphics[width=10.3cm]{pic/case1/03.pdf}
+    \caption{Q 值在点（0，3）的变化曲线}
+    \label{1case03}
 \end{figure}
 通过场景1下的实验结果，可以看出智能体快速的收敛到了最优策略，并且收敛过程十分稳定。结果成功的验证了我们的基于强化学习的设计方法的有效性。这为场景2和场景3的实验做了验证和结果支持。
 \subsection{场景2：带有转弯惩罚的场景}
-在场景2中，我们的地图环境和场景1相同，但加入了额外的转弯损失，当智能体选择左转或掉头时，会得到额外的20的乘法，即设置公式\ref{eq2reward}中$C=20$。对于智能体，采用相同的$\epsilon-Greedy$策略和相同的参数设置。因为我们需要加入转弯的信息用于智能体决策，所以对应的 Q-leanring 的查找表的大小按照5.2.2节的定义为$4\cdot N\cdot M\cdot 4$，即加入额外的一维记录上一时刻的车辆方向的状态，使得智能体能够获得关于是否触发左转动作的信息。由于 Q-Learning 的查找表规模变大，同样由于场景变复杂后，我们降低学习速率为0.3，增加学习过程的稳定性， 为了确保智能体获得足够多的样本，在实验中，我们将迭代次数增加为100次。如图\ref{case2reward}所示，展示了智能体在测试时的累计奖赏，可以看到模型稳定的收敛在了最优策略上。
+在场景2中，我们的地图环境和场景1相同，但加入了额外的转弯损失，当智能体选择左转或掉头时，会得到额外的20的乘法，即设置公式\ref{eq2reward}中$C=20$。对于智能体，采用相同的$\epsilon-Greedy$策略和相同的参数设置。因为我们需要加入转弯的信息用于智能体决策，所以对应的 Q-Learning 的查找表的大小按照5.2.2节的定义为$4\cdot N\cdot M\cdot 4$，即加入额外的一维记录上一时刻的车辆方向的状态，使得智能体能够获得关于是否触发左转动作的信息。由于 Q-Learning 的查找表规模变大，同样由于场景变复杂后，我们降低学习速率为0.3，增加学习过程的稳定性， 为了确保智能体获得足够多的样本，在实验中，我们将迭代次数增加为100次。如图\ref{case2reward}所示，展示了智能体在测试时的累计奖赏，可以看到模型稳定的收敛在了最优策略上。
 \begin{figure}[H]
     \centering
     \includegraphics{pic/case2/case1.pdf}
