@@ -22,12 +22,10 @@ Fredman和 Tarjan通过斐波那契堆实现的算法复杂度为$O(|E| + |V|log
 \section{Floyd 算法}
 Floyd 算法为 Robert Floyd 在1962年提出\citing{Floyd1962Algorithm}，同年代，Warshall 也提出了类似算法，因此该算法又被称为 Floyd-Warshall 算法。Floyd 解决了多源最短路问题，其时间复杂度为$O(|V|^3)$，它通过枚举任意两点之间可能的最短路径然后按照基于动态规划的思想进行更新。
 \subsection{算法描述}
-设$D_{i,j,k}$表示从顶点$i$ 到顶点$j$的只以$(1..k)$集合中的节点为中间节点的最短路径长度，那么我们可以通过枚举$k \in \{1..|V|\}$，按照如下公式更新$D_{i,j,k}$：
-\begin{center}
-    \begin{equation}
+设$D_{i,j,k}$表示从顶点$i$ 到顶点$j$的只以$(1..k)$集合中的节点为中间节点的最短路径长度，那么我们可以通过枚举$k \in \{1..|V|\}$，按照如下公式更新$D_{i,j,k}$：\begin{equation}
     D_{i,j,k} = min(D_{i,j,k-1}, D_{i,k,k-1} + D_{k,j,k-1})
 \end{equation}
-\end{center}
+
 \section{Bellman-Ford 算法}
 Dijkstra和 Floyd 算法存在的问题在于无法处理带有负环的图的最短路径问题，即如果在给定的图中，如果存在一个环路，通过该环路的损失为负值，那么理论上可以无限的降低总损失值，因而无法给出正确的最短路径。所以Richard Bellman 和 Lester Ford于1958年年提出了可以处理负环的 Bellman-Ford 算法\citing{Bellman1958On}。
 \subsection{算法描述}
@@ -41,19 +39,14 @@ $A^{*}$ 算法是一类重要的启发式搜索算法\citing{Astar}，它的核�
 算法的基本流程如下，首先定义集合$C_{set}$为被估算的节点集合，$O_{set}$为将要被估算的节点集合，初始时只包括起点。起点的 $g$函数值为0，$h$函数值设为某一距离函数下的计算结果。当$O_{set}$不为空时，我们取出其中$f$值最小的点$v_{min}$，枚举该点的邻居$v_{neighbor_i}$，如果该点不在$C_{set}$中，根据松弛操作判断$v_{neighbor_i}$的$g$值是否在通过$v_{min}$后更小，如果是，则更新$v_{neighbor_i}$的$g, h, f$值，同时将$v_{neighbor_i}$加入$O_{set}$，如果否，则不做任何更新和操作。最终当我们取出的点$v_{min}$为目标点时，说明我们找到了解。
 \subsection{复杂度分析}
 $A^{*}$ 算法的复杂度依赖于启发式函数的设计。在最坏情况下，$A^{*}$的复杂度相当于一个不带任何优化和限制的搜索算法的复杂度 $O(b^d)$，其中$b$为状态空间的宽度，即每个搜索状态的后继状态的平均数量，在该问题中为每个节点相临节点的数量，$d$为搜索空间的深度，在该问题中为路径的长度的最大值，即为定点的个数。而一个好的启发式函数可以大大减少搜索状态的数量，特别是$b$的值。作为搜索算法，复杂度的定义显然与搜索节点的数量成正比，因此我们定义 $N$： 
-\begin{center}
     \begin{equation}
         N + 1 = 1 + b^* + (b^*)^2 + ... + (b^*)^d
     \end{equation}
-\end{center}
 而最优的启发式函数$h_*(x)$具有$b=1$。对于任意一个非最优的启发式函数，当其启发式函数符合方程\ref{eq3astar}，其时间复杂度为多项式级别。
-\begin{center}
     \begin{equation}
     \label{eq3astar}
         |h(x) - h_*(x)| = O(logh_*(x))
     \end{equation}
-    
-\end{center}
 \section{改进算法}
 随着交通网络的复杂度提高，基于图的搜索算法难以处理过大的地图，因此一些优化方法便被提出。\par
 Thorup 和 Zwick 提出了基于预处理和查询的分步方法\citing{Thorup2001Compact}。这类方法首先离线对原始图进行预处理，降低原问题的复杂度，然后在查询阶段，利用预处理阶段得到的数据和简化后的图快速给出路径规划结果。
